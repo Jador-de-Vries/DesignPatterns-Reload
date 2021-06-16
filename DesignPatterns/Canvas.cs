@@ -51,6 +51,8 @@ namespace DesignPatterns
         private CompositeControl _group;
         public CompositeControl Group => _group;
 
+        private List<BaseShape> _selection = new List<BaseShape>();
+
         #endregion
         public Canvas()
         {
@@ -60,7 +62,7 @@ namespace DesignPatterns
                 Height = this.Height
             };
             Background = Brushes.Transparent;
-            FocusManager.SetIsFocusScope(this, true);
+            FocusManager.SetIsFocusScope(this, false);
             Children.Add(_group);
         }
 
@@ -68,26 +70,36 @@ namespace DesignPatterns
         public BaseControl CreateShape(Type shapeType, Point startPoint, int width, int height)
         {
             Shape shape;
+            BaseControl shapeParent;
             switch (shapeType.ToString())
             {
                 case "System.Windows.Shapes.Rectangle":
                     shape = new System.Windows.Shapes.Rectangle();
+                    shapeParent = new LeafControl(shape)
+                    {
+                        Template = Resources["DesignerItemTemplate"] as ControlTemplate
+                    };
                     break;
                 case "System.Windows.Shapes.Ellipse":
                     shape = new System.Windows.Shapes.Ellipse();
+                    shapeParent = new LeafControl(shape)
+                    {
+                        Template = Resources["DesignerItemTemplate"] as ControlTemplate
+                    };
                     break;
-                default: throw new Exception();
+                default:
+                    shapeParent = new CompositeControl()
+                    {
+                        Template = Resources["DesignerItemTemplate"] as ControlTemplate
+                    };
+                    break;//assume its a group
             }
-
-            BaseControl shapeParent = new LeafControl(shape)
-            {
-                Template = Resources["DesignerItemTemplate"] as ControlTemplate
-            };
+            
 
             shapeParent.Focusable = true;
             shapeParent.PreviewMouseLeftButtonDown += ShapeParent_MouseLeftButtonDown;
             shapeParent.GotFocus += ShapeParent_GotFocus;
-            shapeParent.LostFocus += ShapeParent_LostFocus;
+            //shapeParent.LostFocus += ShapeParent_LostFocus;
             Canvas.SetLeft(shapeParent, startPoint.X);
             Canvas.SetTop(shapeParent, startPoint.Y);
             shapeParent.Width = width;
@@ -110,12 +122,31 @@ namespace DesignPatterns
                 }
             }
         }
+
+        private void ClearSelection()
+        {
+            //Als de muisknop een pointer is en een shape wordt niet aangeklikt, clear de selectie van shapes dan.
+            _selection.Clear();
+
+            // Haal alle adorners weg, selectie is klaar
+            UIElementCollection elements = this.Children;
+            foreach (UIElement element in elements)
+            {
+                AdornerLayer al = AdornerLayer.GetAdornerLayer(element);
+                RemoveAdorner(element, al);
+            }
+        }
         #endregion
 
         #region Event Handlers
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            if (cursorMode != CursorState.Creator) return;
+            if (cursorMode != CursorState.Creator)
+            {
+                if(!Keyboard.IsKeyDown(Key.LeftCtrl))
+                    ClearSelection();
+                return;
+            }
 
             startPoint = e.GetPosition(this);
             Console.WriteLine(DrawingShape);
@@ -129,7 +160,7 @@ namespace DesignPatterns
                     break;
                 default: return;
             }
-
+            
             shape.Fill = Brushes.LightSteelBlue;
             shape.Stroke = Brushes.Black;
             shape.StrokeThickness = 1;
@@ -183,24 +214,18 @@ namespace DesignPatterns
                 AdornerLayer adLayer = AdornerLayer.GetAdornerLayer((UIElement)sender);
                 RemoveAdorner((UIElement)sender, adLayer); // Verwijder vorige adorners op de sender
                 adLayer.Add(ad);
+                _selection.Add(sender as BaseShape);
             }
         }
 
-        private void ShapeParent_LostFocus(object sender, RoutedEventArgs e)
-        {
-            UIElementCollection elements = this.Children;
-            foreach (UIElement element in elements)
-            {
-                AdornerLayer al = AdornerLayer.GetAdornerLayer(element);
-                RemoveAdorner(element, al);
-            }
-        }
         #endregion
 
         private void ShapeParent_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (cursorMode == CursorState.Pointer)
             {
+                if (!Keyboard.IsKeyDown(Key.LeftCtrl))
+                    ClearSelection();
                 (sender as UIElement).Focus();
             }
         }
