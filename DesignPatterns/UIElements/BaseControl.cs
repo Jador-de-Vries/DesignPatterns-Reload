@@ -26,16 +26,25 @@ namespace DesignPatterns.UIElements
             _children.Remove(component);
         }
 
+        public void Draw()
+        {
+            MainWindow.mainWindow.canvas.Children.Add(this);
+        }
+
+        public void Dispose()
+        {
+            MainWindow.mainWindow.canvas.Children.Remove(this);
+        }
+
         public BaseControl GetChild(int noOfChild)
         {
             return _children[noOfChild];
         }
 
-        public void Display(BaseControl control, string indent = "", bool top = true)
+        public void Display(string indent = "", bool top = true)
         {
             if (top)
             {
-                Console.WriteLine(control);
                 if (_children.Count > 1)
                 {
                     Console.WriteLine($"Group {_children.Count}");
@@ -52,7 +61,7 @@ namespace DesignPatterns.UIElements
                 {
                     Console.WriteLine($"{indent}{child}");
                     Console.WriteLine($"{indent}Group {child.Children.Count}");
-                    child.Display(child, indent, false);
+                    child.Display(indent, false);
                 }
             }
         }

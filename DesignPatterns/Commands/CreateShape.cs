@@ -31,13 +31,13 @@ namespace DesignPatterns.Commands
 
         public void Execute()
         {
-            _canvas.Children.Add(_shape);
+            _shape.Draw();
             Console.WriteLine($"[ACTION] Created shape {_shape.Content}");
         }
 
         public void Reverse()
         {
-            _canvas.Children.Remove(_shape);
+            _shape.Dispose();
             Console.WriteLine($"[UNDO] Deleted shape {_shape.Content}");
         }
     }

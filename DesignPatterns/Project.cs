@@ -75,14 +75,9 @@ namespace DesignPatterns
             this.Contents = content;
         }
 
-        public void WriteToDisk()
+        public static void WriteToDisk(string path, string content)
         {
-            File.WriteAllLines(ProjectPath, Contents);
-        }
-
-        public void PutToCanvas()
-        {
-
+            File.WriteAllText(path, content);
         }
     }
 }

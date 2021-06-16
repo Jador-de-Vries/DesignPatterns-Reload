@@ -48,12 +48,17 @@ namespace DesignPatterns
         private Point startPoint;
         private Shape shape;
 
-        private CompositeControl _group = new CompositeControl();
+        private CompositeControl _group;
         public CompositeControl Group => _group;
 
         #endregion
         public Canvas()
         {
+            _group = new CompositeControl()
+            {
+                Width = this.Width,
+                Height = this.Height
+            };
             Background = Brushes.Transparent;
             FocusManager.SetIsFocusScope(this, true);
             Children.Add(_group);
@@ -88,6 +93,7 @@ namespace DesignPatterns
             shapeParent.Width = width;
             shapeParent.Height = height;
             Console.WriteLine(shapeParent);
+            _group.Add(shapeParent);
             return shapeParent;
         }
         private void RemoveAdorner(UIElement element, AdornerLayer adLayer)

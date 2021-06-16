@@ -3,6 +3,7 @@
  */
 
 
+using DesignPatterns.UIElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,15 @@ namespace DesignPatterns.Commands
     /// </summary>
     class SaveProject : ICommand
     {
-        private readonly Project project;
+        private readonly BaseControl _group;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="project">De projectdata</param>
-        public SaveProject(Project project)
+        public SaveProject()
         {
-            this.project = project;
+            _group = MainWindow.mainWindow.canvas.Group;
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace DesignPatterns.Commands
         /// </summary>
         public void Execute()
         {
-            project.WriteToDisk();
+            _group.Display();
         }
 
         /// <summary>

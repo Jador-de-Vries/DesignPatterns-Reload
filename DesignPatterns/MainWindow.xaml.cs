@@ -56,7 +56,7 @@ namespace DesignPatterns
             else
             {
                 //project.Contents = canvas.SerializeCanvas();
-                canvas.Invoker.ExecuteCommand(new SaveProject(this.project));
+                canvas.Invoker.ExecuteCommand(new SaveProject());
             }
         }
 
