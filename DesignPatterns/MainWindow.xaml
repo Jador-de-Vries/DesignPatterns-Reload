@@ -1,0 +1,109 @@
+﻿<Window x:Name="CanvasWindow" x:Class="DesignPatterns.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfx="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"
+        xmlns:local="clr-namespace:DesignPatterns"
+        mc:Ignorable="d"
+        Loaded="CanvasWindow_Loaded"
+        Title="LePaint" Height="450" Width="800">
+    <Grid Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="_New Project" />
+                <MenuItem Header="_Open Project" Click="Menu_File_LoadProject_Click"/>
+                <MenuItem Header="_Save Project" Click="Menu_File_SaveProject_Click"/>
+                <MenuItem Header="Save Project _As" Click="Menu_File_SaveProjectAs_Click" />
+                <Separator/>
+                <MenuItem Header="Export project">
+                    <MenuItem Header="Export as PNG" />
+                    <MenuItem Header="Export as JPEG" />
+                </MenuItem>
+                <MenuItem Header="Project Settings"/>
+                <Separator/>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Cut" />
+                <MenuItem Header="Copy" />
+                <MenuItem Header="Paste" />
+                <Separator/>
+                <MenuItem Header="Undo" Click="Menu_Edit_Undo_Click"/>
+                <MenuItem Header="Redo" Click="Menu_Edit_Redo_Click"/>
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem Header="Show Groups" IsCheckable="True"/>
+            </MenuItem>
+            <MenuItem Header="Shapes">
+                <MenuItem x:Name="Menu_Shapes_Rectangle" Header="Rectangle" Click="Menu_Shapes_Rectangle_Click"/>
+                <MenuItem x:Name="Menu_Shapes_Circle" Header="Circle" Click="Menu_Shapes_Circle_Click"/>
+                <Separator />
+                <MenuItem Header="Group"/>
+            </MenuItem>
+        </Menu>
+        <ToolBarTray Grid.Row="1" Height="auto">
+            <ToolBar x:Name="EditToolBar" HorizontalAlignment="Left" Height="24" VerticalAlignment="Top">
+                <Button Click="Menu_Edit_Undo_Click" ToolTip="Ongedaan maken">
+                    <Image Source="/Resources/Icons/Undo_16x.png"/>
+                </Button>
+                <Button Click="Menu_Edit_Redo_Click" ToolTip="Hergedaan maken">
+                    <Image Source="/Resources/Icons/Redo_16x.png"/>
+                </Button>
+            </ToolBar>
+            <ToolBar x:Name="ShapeToolBar" HorizontalAlignment="Left" Height="24">
+                <Button Click="Menu_Shapes_Delete_Click" ToolTip="Verwijder geselecteerde shape">
+                    <Image Source="/Resources/Icons/Close_red_16x.png" />
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <ScrollViewer x:Name="scrollView" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="2">
+            <local:Canvas
+                ClipToBounds="True"
+                Background="White"
+                x:Name="canvas" 
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                
+            >
+                <local:Canvas.Resources>
+                    <ControlTemplate x:Key="MoveThumbTemplate" TargetType="{x:Type local:MoveThumb}">
+                        <Rectangle Fill="Transparent"/>
+                    </ControlTemplate>
+
+                    <ControlTemplate x:Key="DesignerItemTemplate" TargetType="ContentControl">
+                        <Grid>
+                            <local:MoveThumb Template="{StaticResource MoveThumbTemplate}"
+        DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+        Cursor="SizeAll"/>
+
+                            <ContentPresenter Content="{TemplateBinding ContentControl.Content}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </local:Canvas.Resources>
+                <local:Canvas.LayoutTransform>
+                    <ScaleTransform x:Name="canvasScaleTransform" ScaleX="{Binding ElementName=canvasZoom, Path=Value}" ScaleY="{Binding ElementName=canvasZoom, Path=Value}"/>
+                </local:Canvas.LayoutTransform>
+            </local:Canvas>
+
+
+        </ScrollViewer>
+
+        <StatusBar Grid.Row="2" Height="32" VerticalAlignment="Bottom" >
+            <Label FontSize="11">Zoom</Label>
+            <Slider x:Name="canvasZoom" Value="1" Minimum="0.4" Maximum="40" TickFrequency="0.1" IsSnapToTickEnabled="True" Width="128" />
+            <TextBlock Text="{Binding ElementName=canvasZoom, Path=Value, StringFormat={}{0}, UpdateSourceTrigger=PropertyChanged}"/>
+            <Separator/>
+            <TextBlock Text="{Binding Path=Cursor, UpdateSourceTrigger=PropertyChanged}"/>
+        </StatusBar>
+    </Grid>
+</Window>
