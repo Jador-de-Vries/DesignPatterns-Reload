@@ -30,10 +30,10 @@ namespace DesignPatterns
         public MainWindow()
         {
             InitializeComponent();
-            project = new Project(800, 600);
+            project = Project.Instance;
             mainWindow = this;
-            canvas.Width = project.Width;
-            canvas.Height = project.Height;
+            canvas.Width = 1280;
+            canvas.Height = 720;
         }
 
         private void Menu_Shapes_Rectangle_Click(object sender, RoutedEventArgs e)
@@ -55,7 +55,6 @@ namespace DesignPatterns
             }
             else
             {
-                //project.Contents = canvas.SerializeCanvas();
                 canvas.Invoker.ExecuteCommand(new SaveProject());
             }
         }
@@ -69,7 +68,6 @@ namespace DesignPatterns
             };
             if (sfd.ShowDialog() == true)
             {
-                Console.WriteLine(sfd.FileName);
                 project.ProjectPath = sfd.FileName;
                 Menu_File_SaveProject_Click(sender, e);
             }

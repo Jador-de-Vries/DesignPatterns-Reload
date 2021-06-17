@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesignPatterns.Visitors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace DesignPatterns.UIElements
 {
-    class LeafControl : BaseControl
+    public class LeafControl : BaseControl
     {
         private readonly Shape _shape;
         public LeafControl(Shape shape)
@@ -47,7 +48,7 @@ namespace DesignPatterns.UIElements
                     break;
                 default: break;
             }
-            line += $"{Canvas.GetLeft(this)} {Canvas.GetTop(this)} {Width} {Height}";
+            line += $"{(int)Canvas.GetLeft(this)} {(int)Canvas.GetTop(this)} {(int)Width} {(int)Height}";
             return line;
         }
     }

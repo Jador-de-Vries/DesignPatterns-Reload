@@ -27,19 +27,13 @@ namespace DesignPatterns.Commands
         }
         public void Execute()
         {
-            Canvas.SetLeft(_shape, _newPosition.X);
-            Canvas.SetTop(_shape, _newPosition.Y);
-            _shape.Width = _newWidth;
-            _shape.Height = _newHeight;
+            _shape.Accept(new Visitors.Resize(_newWidth, _newHeight, _newPosition));
             Console.WriteLine($"[ACTION] Shape resized. new Dimensions: ({_newPosition}), new Width: {_newWidth}, new Height: {_newHeight}");
         }
 
         public void Reverse()
         {
-            Canvas.SetLeft(_shape, _oldPosition.X);
-            Canvas.SetTop(_shape, _oldPosition.Y);
-            _shape.Width = _oldWidth;
-            _shape.Height = _oldHeight;
+            _shape.Accept(new Visitors.Resize(_oldWidth, _oldHeight, _oldPosition));
             Console.WriteLine("[UNDO] Shape un-resized.");
         }
     }

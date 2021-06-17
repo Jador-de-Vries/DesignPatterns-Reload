@@ -6,78 +6,47 @@ using System.Threading.Tasks;
 
 namespace DesignPatterns
 {
-    public class Project : CompositeControl
+    public class Project
     {
         /// <summary>
         /// Laatst opgeslagen pad van het project
         /// </summary>
-        private string projectPath = "";
+        private string _projectPath = "";
+        public string ProjectPath
+        {
+            get { return _projectPath; }
+            set { _projectPath = value; }
+        }
 
-        /// <summary>
-        /// Lengte en hoogte van het canvas
-        /// </summary>
-        private int width, height;
-
-        /// <summary>
-        /// String array van de content in het project
-        /// Wordt gebruikt voor het saven en loaden
-        /// </summary>
-        private List<string> contents;
-
+        private static Project _instance = null;
+        private static readonly object padlock = new object();
         /// <summary>
         /// Constructor voor nieuwe projecten
         /// </summary>
         /// <param name="width">Lengte van het projectcanvas</param>
         /// <param name="height">Breedte van het projecanvas</param>
-        public Project(int width, int height)
+        private Project() { }
+
+        public static Project Instance
         {
-            this.width = width;
-            this.height = height;
+            get
+            {
+                lock(padlock)
+                {
+                    if (_instance == null)
+                        _instance = new Project();
+                    return _instance;
+                }
+            }
         }
 
         /// <summary>
-        /// Constructor voor al bestaande projecten
+        /// Schrijft een string naar het pad Project._projectPath
         /// </summary>
-        /// <param name="width">Lengte van het projectcanvas</param>
-        /// <param name="height">Breedte van het projectcanvas</param>
-        /// <param name="contents">String array van de contents die in het projectcanvas moeten staan</param>
-        public Project(int width, int height, List<string> contents) : this(width, height)
+        /// <param name="content">String die geschreven moet worden</param>
+        public void WriteToDisk(string content)
         {
-            this.contents = contents;
-        }
-
-        public int Width
-        {
-            get { return width; }
-            set { width = value; }
-        }
-
-        public int Height
-        {
-            get { return height; }
-            set { height = value; }
-        }
-
-        public string ProjectPath
-        {
-            get { return projectPath; }
-            set { projectPath = value; }
-        }
-
-        public List<string> Contents
-        {
-            get { return contents; }
-            set { contents = value; }
-        }
-
-        public void SetProjectContents(List<string> content)
-        {
-            this.Contents = content;
-        }
-
-        public static void WriteToDisk(string path, string content)
-        {
-            File.WriteAllText(path, content);
+            File.WriteAllText(_projectPath, content);
         }
     }
 }

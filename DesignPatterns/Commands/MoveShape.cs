@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using DesignPatterns;
 
 namespace DesignPatterns.Commands
 {
@@ -21,15 +22,13 @@ namespace DesignPatterns.Commands
         }
         public void Execute()
         {
-            Canvas.SetLeft(_shape, _end.X);
-            Canvas.SetTop(_shape, _end.Y);
+            _shape.Accept(new Visitors.Move(_end));
             Console.WriteLine($"[ACTION] Set shape to: ({_end})");
         }
 
         public void Reverse()
         {
-            Canvas.SetLeft(_shape, _start.X);
-            Canvas.SetTop(_shape, _start.Y);
+            _shape.Accept(new Visitors.Move(_start));
             Console.WriteLine($"[UNDO] Set shape back to: ({_start})");
         }
     }

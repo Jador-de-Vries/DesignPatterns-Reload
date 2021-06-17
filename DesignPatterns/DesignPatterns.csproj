@@ -80,7 +80,11 @@
     <Compile Include="UIElements\BaseControl.cs" />
     <Compile Include="UIElements\CompositeControl.cs" />
     <Compile Include="UIElements\LeafControl.cs" />
-    <Compile Include="Visitors\IVisitor.cs" />
+    <Compile Include="Visitors\IAccept.cs" />
+    <Compile Include="Visitors\IVisit.cs" />
+    <Compile Include="Visitors\Move.cs" />
+    <Compile Include="Visitors\Resize.cs" />
+    <Compile Include="Visitors\Save.cs" />
     <Page Include="HistoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

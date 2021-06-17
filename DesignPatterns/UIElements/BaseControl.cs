@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesignPatterns.Visitors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace DesignPatterns.UIElements
 {
-    public abstract class BaseControl : ContentControl
+    public abstract class BaseControl : ContentControl, IAccept
     {
         protected readonly List<BaseControl> _children = new List<BaseControl>();
 
@@ -44,29 +45,30 @@ namespace DesignPatterns.UIElements
             return _children[noOfChild];
         }
 
-        public void Display(string indent = "", bool top = true)
+        /// <summary>
+        /// Recursieve method voor het serialiseren van de groepenstructuur
+        /// </summary>
+        /// <param name="indent">Defaults naar 0× spaties, voegt twee spaties toe elke keer als de methode zichzelf heeft geroepen.</param>
+        /// <returns>
+        /// Group 2
+        ///   rectangle...
+        ///   rectangle...
+        /// </returns>
+        public string Serialize(string indent = "")
         {
-            if (top)
-            {
-                if (_children.Count > 1)
-                {
-                    Console.WriteLine($"Group {_children.Count}");
-                }
-            }
+            string s = $"{indent}{this}\r\n";
+            if (indent == "                                        ") return s; // Als er 20 indents zijn is de recursie waarschijnlijk infinite, return s om een stackoverflow te voorkomen
             indent += "  ";
-            foreach(var child in _children)
+            foreach(BaseControl c in _children)
             {
-                if (child.Children.Count <= 0)
-                {
-                    Console.WriteLine($"{indent}{child}");
-                }
-                else
-                {
-                    Console.WriteLine($"{indent}{child}");
-                    Console.WriteLine($"{indent}Group {child.Children.Count}");
-                    child.Display(indent, false);
-                }
+                s += c.Serialize(indent);
             }
+            return s;
+        }
+
+        public void Accept(IVisit visitor)
+        {
+            visitor.Visit(this);
         }
 
     }

@@ -33,7 +33,7 @@ namespace DesignPatterns.Commands
         /// </summary>
         public void Execute()
         {
-            _group.Display();
+            _group.Accept(new Visitors.Save());
         }
 
         /// <summary>

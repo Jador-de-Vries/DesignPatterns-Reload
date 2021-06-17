@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesignPatterns.Visitors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,7 @@ namespace DesignPatterns.UIElements
 
         public override string ToString()
         {
-            return $"group {_children.Count()}";
+            return $"Group {_children.Count()}";
         }
     }
 }
