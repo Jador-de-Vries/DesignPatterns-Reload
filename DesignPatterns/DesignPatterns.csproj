@@ -59,7 +59,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Canvas.cs" />
-    <Compile Include="Commands\BaseShape.cs" />
     <Compile Include="Commands\CommandInvoker.cs" />
     <Compile Include="Commands\CreateShape.cs" />
     <Compile Include="Commands\DeleteShape.cs" />
@@ -81,6 +80,7 @@
     <Compile Include="UIElements\BaseControl.cs" />
     <Compile Include="UIElements\CompositeControl.cs" />
     <Compile Include="UIElements\LeafControl.cs" />
+    <Compile Include="Visitors\IVisitor.cs" />
     <Page Include="HistoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

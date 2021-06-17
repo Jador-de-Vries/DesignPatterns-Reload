@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wpfx="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"
         xmlns:local="clr-namespace:DesignPatterns"
+        xmlns:localUIElements="clr-namespace:DesignPatterns.UIElements"
         mc:Ignorable="d"
         Loaded="CanvasWindow_Loaded"
         Title="LePaint" Height="450" Width="800">
@@ -64,6 +65,12 @@
                 <Button Click="Menu_Shapes_Delete_Click" ToolTip="Verwijder geselecteerde shape">
                     <Image Source="/Resources/Icons/Close_red_16x.png" />
                 </Button>
+                <Button x:Name="MergeSelection" Click="MergeSelection_Click" ToolTip="Merge selectie naar groep">
+                    Merge Selection
+                </Button>
+                <Button x:Name="ShowGroup" Click="ShowGroup_Click">
+                    Show Groups
+                </Button>
             </ToolBar>
         </ToolBarTray>
         <ScrollViewer x:Name="scrollView" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="2">
@@ -80,13 +87,13 @@
                         <Rectangle Fill="Transparent"/>
                     </ControlTemplate>
 
-                    <ControlTemplate x:Key="DesignerItemTemplate" TargetType="ContentControl">
+                    <ControlTemplate x:Key="DesignerItemTemplate" TargetType="localUIElements:BaseControl">
                         <Grid>
                             <local:MoveThumb Template="{StaticResource MoveThumbTemplate}"
         DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
         Cursor="SizeAll"/>
 
-                            <ContentPresenter Content="{TemplateBinding ContentControl.Content}"/>
+                            <ContentPresenter Content="{TemplateBinding localUIElements:BaseControl.Content}"/>
                         </Grid>
                     </ControlTemplate>
                 </local:Canvas.Resources>

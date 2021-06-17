@@ -15,7 +15,10 @@ namespace DesignPatterns.UIElements
 
         public List<BaseControl> Children => _children;
 
-
+        public int X { get { return (int)Canvas.GetLeft(this); } }
+        public int Y { get { return (int)Canvas.GetTop(this); } }
+        
+        
         public void Add(BaseControl component)
         {
             _children.Add(component);

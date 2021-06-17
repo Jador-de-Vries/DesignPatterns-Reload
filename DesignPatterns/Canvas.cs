@@ -51,7 +51,8 @@ namespace DesignPatterns
         private CompositeControl _group;
         public CompositeControl Group => _group;
 
-        private List<BaseShape> _selection = new List<BaseShape>();
+        private readonly List<BaseControl> _selection = new List<BaseControl>();
+        public List<BaseControl> Selection => _selection;
 
         #endregion
         public Canvas()
@@ -67,32 +68,33 @@ namespace DesignPatterns
         }
 
         #region Methods
-        public BaseControl CreateShape(Type shapeType, Point startPoint, int width, int height)
+        public BaseControl CreateShape(ShapeType shapeType, Point startPoint, int width, int height)
         {
             Shape shape;
             BaseControl shapeParent;
-            switch (shapeType.ToString())
+            switch (shapeType)
             {
-                case "System.Windows.Shapes.Rectangle":
+                default:
+                case ShapeType.Rectangle:
                     shape = new System.Windows.Shapes.Rectangle();
                     shapeParent = new LeafControl(shape)
                     {
                         Template = Resources["DesignerItemTemplate"] as ControlTemplate
                     };
                     break;
-                case "System.Windows.Shapes.Ellipse":
+                case ShapeType.Ellipse:
                     shape = new System.Windows.Shapes.Ellipse();
                     shapeParent = new LeafControl(shape)
                     {
                         Template = Resources["DesignerItemTemplate"] as ControlTemplate
                     };
                     break;
-                default:
-                    shapeParent = new CompositeControl()
+                case ShapeType.Group:
+                    shapeParent = new CompositeControl(_selection)
                     {
                         Template = Resources["DesignerItemTemplate"] as ControlTemplate
                     };
-                    break;//assume its a group
+                    break;
             }
             
 
@@ -139,7 +141,7 @@ namespace DesignPatterns
         #endregion
 
         #region Event Handlers
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (cursorMode != CursorState.Creator)
             {
@@ -195,7 +197,7 @@ namespace DesignPatterns
         {
             if (shape != null)
             {
-                _invoker.ExecuteCommand(new CreateShape(this, shape.GetType(), startPoint, (int)shape.Width, (int)shape.Height));
+                _invoker.ExecuteCommand(new CreateShape(DrawingShape, startPoint, (int)shape.Width, (int)shape.Height));
                 Children.Remove(shape);
                 shape = null;
                 CursorMode = CursorState.Pointer;
@@ -214,7 +216,7 @@ namespace DesignPatterns
                 AdornerLayer adLayer = AdornerLayer.GetAdornerLayer((UIElement)sender);
                 RemoveAdorner((UIElement)sender, adLayer); // Verwijder vorige adorners op de sender
                 adLayer.Add(ad);
-                _selection.Add(sender as BaseShape);
+                _selection.Add(sender as BaseControl);
             }
         }
 

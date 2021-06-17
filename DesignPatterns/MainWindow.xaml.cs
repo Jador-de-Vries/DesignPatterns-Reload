@@ -118,5 +118,15 @@ namespace DesignPatterns
             };
             historyWindow.Show();
         }
+
+        private void MergeSelection_Click(object sender, RoutedEventArgs e)
+        {
+            canvas.Invoker.ExecuteCommand(new MergeToGroup(canvas.Selection));
+        }
+
+        private void ShowGroup_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

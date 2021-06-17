@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace DesignPatterns
+namespace DesignPatterns.Visitors
 {
-    public enum ShapeType
+    class IVisitor
     {
-        Ellipse,
-        Rectangle,
-        Group
     }
 }

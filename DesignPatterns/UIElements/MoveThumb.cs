@@ -31,8 +31,7 @@ namespace DesignPatterns
         {
             BaseControl item = this.DataContext as BaseControl;
             _endPoint = new Point(Canvas.GetLeft(item), Canvas.GetTop(item));
-            Canvas canvas = VisualTreeHelper.GetParent(item) as Canvas;
-            canvas.Invoker.ExecuteCommand(new MoveShape(item, _startPoint, _endPoint));
+            MainWindow.mainWindow.canvas.Invoker.ExecuteCommand(new MoveShape(item, _startPoint, _endPoint));
         }
 
         private void MoveThumb_DragStarted(object sender, DragStartedEventArgs e)

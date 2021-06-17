@@ -13,20 +13,18 @@ namespace DesignPatterns.Commands
     /// </summary>
     class CreateShape : ICommand
     {
-        private readonly Canvas _canvas;
-        private readonly Type _shapeType;
+        private readonly ShapeType _shapeType;
         private readonly Point _startPoint;
         private readonly int _width, _height;
         private readonly BaseControl _shape;
 
-        public CreateShape(Canvas canvas, Type shapeType, Point startPoint, int width, int height)
+        public CreateShape(ShapeType shapeType, Point startPoint, int width, int height)
         {
             _shapeType = shapeType;
             _startPoint = startPoint;
             _width = width;
             _height = height;
-            _canvas = canvas;
-            _shape = _canvas.CreateShape(_shapeType, _startPoint, _width, _height);
+            _shape = MainWindow.mainWindow.canvas.CreateShape(_shapeType, _startPoint, _width, _height);
         }
 
         public void Execute()

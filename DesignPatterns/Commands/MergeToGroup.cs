@@ -1,29 +1,47 @@
-﻿using System;
+﻿using DesignPatterns.UIElements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace DesignPatterns.Commands
 {
     class MergeToGroup : ICommand
     {
-        private readonly List<BaseShape> _selection;
-        private readonly BaseShape _parent;
-        public MergeToGroup(List<BaseShape> selection, BaseShape parent)
+        private readonly List<BaseControl> _selection;
+        public MergeToGroup(List<BaseControl> selection)
         {
             _selection = selection;
-            _parent = parent;
         }
 
         public void Execute()
         {
-            throw new NotImplementedException();
+            //Remove items from selection from canvas
+            foreach (BaseControl item in _selection)
+            {
+                MainWindow.mainWindow.canvas.Group.Remove(item);
+                MainWindow.mainWindow.canvas.Children.Remove(item);
+            }
+
+            int x = _selection.OrderBy(c => c.X).First().X;
+            int y = _selection.OrderBy(c => c.Y).First().Y;
+            BaseControl lastX = _selection.OrderBy(c => c.X).Last();
+            BaseControl lastY = _selection.OrderBy(c => c.Y).Last();
+            int w = (int)(lastX.X - x + lastX.Width);
+            int h = (int)(lastY.Y - y + lastY.Height);
+
+            CompositeControl group = MainWindow.mainWindow.canvas.CreateShape(ShapeType.Group, new System.Windows.Point(x, y), w, h) as CompositeControl;
+
+            MainWindow.mainWindow.canvas.Children.Add(group);
+            MainWindow.mainWindow.canvas.Group.Add(group);
         }
 
         public void Reverse()
         {
-            throw new NotImplementedException();
+            // Tijdsgebrek
         }
     }
 }
